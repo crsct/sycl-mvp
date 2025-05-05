@@ -15,8 +15,8 @@ RTLIB_LDLIBS = $(RT_LDLIBS)
 RTLIB_CPPFLAGS = $(RT_CPPFLAGS)
 
 ifeq "$(origin NO_CONFIG_MF)" "undefined"
-$(info Including global makefile /home/noah/Development/Uni/jlab/gapc/debug/share/gapc/config_linux-gnu.mf)
--include /home/noah/Development/Uni/jlab/gapc/debug/share/gapc/config_linux-gnu.mf
+$(info Including global makefile config_linux-gnu.mf)
+-include config_linux-gnu.mf
 endif
 
 -include gapc_local.mf
@@ -25,6 +25,8 @@ ifdef MF
 $(info Including extra makefile $(MF))
 include $(MF)
 endif
+
+CXX=acpp
 
 CXXFILES =  sycl_working_main.cc sycl_working.cc
 

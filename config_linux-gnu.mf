@@ -1,0 +1,102 @@
+
+####### Automatic Configuration
+
+#system
+SYSTEM_SUFFIX = _linux-gnu
+PREFIX=/home/noah/Development/Uni/jlab/gapc/debug
+
+# programms
+CXX = g++ 
+CC = gcc 
+LD = $(CC)
+LEX = /nix/store/hdaz06418x5sh5jk7zi5c4wkkinb8dvs-flex-2.6.4/bin/flex
+YACC = /nix/store/28sz4ksdzmz45i2siydb91ydf88lh4bb-bison-3.8.2/bin/bison
+SED = /nix/store/7fqp73ncnbwr5bxxszqicf6r33d9yhkw-gnused-4.9/bin/sed
+INSTALL = /nix/store/zx8aqgdy735qzk81glfwil6mbi6ddqb1-coreutils-9.4/bin/install -c
+SHELL = /nix/store/q8qq40xg2grfh9ry1d9x4g7lq4ra7n81-bash-5.2-p21/bin/bash
+HG = /nix/store/s7iqwi4k54qpya9ivvs8ici14s3ibpkw-mercurial-6.5.3/bin/hg
+
+#flags
+# c
+CFLAGS =  -O3 -I librna/ -std=c11 -DHAVE_CONFIG_H  
+
+#c++
+CXXFLAGS =  -O3 -g  -std=c++17 -D_XOPEN_SOURCE=500 -MMD -MP -Wall -Wnon-virtual-dtor -Wno-unused-variable -Wno-parentheses
+
+#library
+SO_SUFFIX = .so
+SHARED_FLAGS = -shared 
+FAST_MATH =  -ffast-math 
+PIC_FLAGS = -fPIC
+INSTALL_SHARED_FLAG=
+
+#bison
+BISON_VERSION_FLAG =  -DBISONNEW 
+
+#boost
+BOOST_CPPFLAGS = 
+BOOST_LDFLAGS = -L/nix/store/9w9ndv9n74qid65gglh9h127mh4ndba8-boost-1.81.0/lib
+BOOST_PROGRAM_OPTIONS_LIB = -lboost_program_options
+BOOST_UNIT_TEST_FRAMEWORK_LIB = -lboost_unit_test_framework
+
+#gsl
+GSL_LIBS = -L/nix/store/wh63z2hi25bkiajrg6rzj9pfpyvwp0wy-gsl-2.7.1/lib -lgsl -lgslcblas -lm
+GSL_CFLAGS = -I/nix/store/7ndfhqz4klcagnzqni99b5346092vswm-gsl-2.7.1-dev/include
+
+# openmp
+CXXFLAGS_OPENMP = -fopenmp
+
+####### Fixed Configuration
+
+AR = ar
+
+#preprocessor
+LIB_RT = rtlib
+LIB_RNA = librna
+LIB_GENERAL = 
+INCLUDE_PATH=/include
+CPPFLAGS += $(BOOST_CPPFLAGS) \
+	 $(CPPFLAGS_EXTRA) \
+	 $(RTLIB_CPPFLAGS)
+
+# c
+CFLAGS += -DNDEBUG
+
+# c++
+CXXFLAGS += -DNDEBUG $(BISON_VERSION_FLAG) $(CXXFLAGS_EXTRA)
+
+# linker
+LIB_PATH=/lib
+LDFLAGS = $(BOOST_LDFLAGS)  \
+	$(LDFLAGS_EXTRA) \
+	$(RTLIB_LDFLAGS) \
+	$(shell echo " $(BOOST_LDFLAGS) " | sed -e 's/[ ][ ]*[^ ]*\.o[ ]//g' | sed -e 's/\-L/-Xlinker -rpath -Xlinker /g') \
+	$(shell echo " $(LDFLAGS_EXTRA) " | sed -e 's/[ ][ ]*[^ ]*\.o[ ]//g' | sed -e 's/\-L/-Xlinker -rpath -Xlinker /g') \
+	$(shell echo " $(RTLIB_LDFLAGS) " | sed -e 's/[ ][ ]*[^ ]*\.o[ ]//g' | sed -e 's/\-L/-Xlinker -rpath -Xlinker /g') 
+
+LDLIBS = $(RTLIB_LDLIBS) \
+	 $(LDLIBS_EXTRA)
+
+
+
+# Options for compling GapC generated code
+# set to RTLIB_LDLIBS
+RT_LDLIBS = $(GSL_LIBS) -lrna
+
+# set to RTLIB_LDFLAGS
+RT_LDFLAGS = -L$(PREFIX)$(LIB_PATH)/$(LIB_GENERAL)
+
+# set to RTLIB_CPPFLAGS
+RT_CPPFLAGS = $(GSL_CFLAGS) \
+	 -I$(PREFIX)$(INCLUDE_PATH)/$(LIB_GENERAL) \
+	 -I$(PREFIX)$(INCLUDE_PATH)/$(LIB_RT) \
+	 -I$(PREFIX)$(INCLUDE_PATH)/$(LIB_RNA) \
+
+RTLIB = $(PREFIX)$(INCLUDE_PATH)/$(LIB_RT)
+
+
+
+
+
+
+
